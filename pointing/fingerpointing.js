@@ -1,7 +1,6 @@
 import alt from 'alt';
 import game from 'natives';
 
-let localPlayer = alt.getLocalPlayer();
 
 export default class Fingerpointing {
     constructor(){
@@ -9,6 +8,7 @@ export default class Fingerpointing {
         this.interval = null;
         this.cleanStart = false;
         this.gameplayCam = game.createCameraWithParams("gameplay");
+        this.localPlayer = alt.getLocalPlayer();
     }
 
         start () {
@@ -16,9 +16,9 @@ export default class Fingerpointing {
                 this.active = true;
 
                 this.requestAnimDictPromise("anim@mp_point").then(()=>{
-                    game.setPedCurrentWeaponVisible(localPlayer.scriptID, 0, 1, 1, 1);
-                    game.setPedConfigFlag(localPlayer.scriptID, 36, true);
-                    game.taskMoveNetwork(localPlayer.scriptID,"task_mp_pointing", 0.5, false, "anim@mp_point", 24);
+                    game.setPedCurrentWeaponVisible(this.localPlayer.scriptID, 0, 1, 1, 1);
+                    game.setPedConfigFlag(this.localPlayer.scriptID, 36, true);
+                    game.taskMoveNetwork(this.localPlayer.scriptID,"task_mp_pointing", 0.5, false, "anim@mp_point", 24);
                     game.removeAnimDict("anim@mp_point");
                     this.cleanStart = true;
                     this.interval = alt.setInterval(this.process.bind(this), 0);
@@ -38,16 +38,16 @@ export default class Fingerpointing {
 
                 if(this.cleanStart){
                     this.cleanStart = false;
-                    game.setNetworkTaskAction(localPlayer.scriptID, "Stop");
+                    game.setNetworkTaskAction(this.localPlayer.scriptID, "Stop");
 
-                    if (!game.isPedInjured(localPlayer.scriptID)) {
-                        game.clearPedSecondaryTask(localPlayer.scriptID);
+                    if (!game.isPedInjured(this.localPlayer.scriptID)) {
+                        game.clearPedSecondaryTask(this.localPlayer.scriptID);
                     }
-                    if (!game.isPedInAnyVehicle(localPlayer.scriptID, true)) {
-                        game.setPedCurrentWeaponVisible(localPlayer.scriptID, 1, 1, 1, 1);
+                    if (!game.isPedInAnyVehicle(this.localPlayer.scriptID, true)) {
+                        game.setPedCurrentWeaponVisible(this.localPlayer.scriptID, 1, 1, 1, 1);
                     }
-                    game.setPedConfigFlag(localPlayer.scriptID, 36, false);
-                    game.clearPedSecondaryTask(localPlayer.scriptID);
+                    game.setPedConfigFlag(this.localPlayer.scriptID, 36, false);
+                    game.clearPedSecondaryTask(this.localPlayer.scriptID);
                 }
             }
         }
@@ -57,13 +57,13 @@ export default class Fingerpointing {
 
         getRelativePitch () {
             let camRot = game.getGameplayCamRot(2);
-            return camRot.x - game.getEntityPitch(localPlayer.scriptID);
+            return camRot.x - game.getEntityPitch(this.localPlayer.scriptID);
         }
 
         process () {
             if (this.active) {
 
-                game.isTaskMoveScriptedActive(localPlayer.scriptID);
+                game.isTaskMoveScriptedActive(this.localPlayer.scriptID);
 
                 let camPitch = this.getRelativePitch();
 
@@ -96,10 +96,10 @@ export default class Fingerpointing {
                 *
                  */
 
-                game.setNetworkTaskParamFloat(localPlayer.scriptID, "Pitch", camPitch);
-                game.setNetworkTaskParamFloat(localPlayer.scriptID, "Heading", camHeading * -1.0 + 1.0);
-                game.setNetworkTaskParamBool(localPlayer.scriptID, "isBlocked", 0);
-                game.setNetworkTaskParamBool(localPlayer.scriptID, "isFirstPerson", game._0xEE778F8C7E1142E2(game._0x19CAFA3C87F7C2FF()) === 4);
+                game.setNetworkTaskParamFloat(this.localPlayer.scriptID, "Pitch", camPitch);
+                game.setNetworkTaskParamFloat(this.localPlayer.scriptID, "Heading", camHeading * -1.0 + 1.0);
+                game.setNetworkTaskParamBool(this.localPlayer.scriptID, "isBlocked", 0);
+                game.setNetworkTaskParamBool(this.localPlayer.scriptID, "isFirstPerson", game._0xEE778F8C7E1142E2(game._0x19CAFA3C87F7C2FF()) === 4);
 
             }
         }
