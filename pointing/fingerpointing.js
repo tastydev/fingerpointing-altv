@@ -3,7 +3,6 @@ import game from 'natives';
 
 let localPlayer = alt.getLocalPlayer();
 
-//Fingerpointing
 export default class Fingerpointing {
     constructor(){
         this.active = false;
@@ -20,7 +19,6 @@ export default class Fingerpointing {
                     game.setPedCurrentWeaponVisible(localPlayer.scriptID, 0, 1, 1, 1);
                     game.setPedConfigFlag(localPlayer.scriptID, 36, true);
                     game.taskMoveNetwork(localPlayer.scriptID,"task_mp_pointing", 0.5, false, "anim@mp_point", 24);
-                    //game.taskPlayAnim(localPlayer.scriptID,"anim@mp_point", "task_mp_pointing", 8.0, 1, -1, 24, 0, 0, 0, 0);
                     game.removeAnimDict("anim@mp_point");
                     this.cleanStart = true;
                     this.interval = alt.setInterval(this.process.bind(this), 0);
