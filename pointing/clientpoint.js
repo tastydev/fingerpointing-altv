@@ -1,4 +1,4 @@
-import alt from 'alt';
+import * as alt from 'alt';
 import Fingerpointing from 'fingerpointing';
 
 let pointing = new Fingerpointing();

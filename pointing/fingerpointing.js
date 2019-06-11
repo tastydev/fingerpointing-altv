@@ -1,5 +1,5 @@
-import alt from 'alt';
-import game from 'natives';
+import * as alt from 'alt';
+import * as game from 'natives';
 
 
 export default class Fingerpointing {
@@ -11,7 +11,7 @@ export default class Fingerpointing {
         this.localPlayer = alt.getLocalPlayer();
     }
 
-        start () {
+        start() {
             if (!this.active) {
                 this.active = true;
 
@@ -77,8 +77,8 @@ export default class Fingerpointing {
 
                 let camHeading = game.getGameplayCamRelativeHeading();
 
-                //let cosCamHeading = Math.cos(camHeading); For raycasting not implemented currently
-                //let sinCamHeading = Math.sin(camHeading); For raycasting not implemented currently
+                let cosCamHeading = Math.cos(camHeading);
+                let sinCamHeading = Math.sin(camHeading);
 
                 if (camHeading < -180.0) {
                     camHeading = -180.0;
@@ -88,17 +88,17 @@ export default class Fingerpointing {
                 }
                 camHeading = (camHeading + 180.0) / 360.0;
 
-                /*
-                * For raycasting not implemented currently
-                *
-                *let coords = game.getOffsetFromEntityGivenWorldCoords((cosCamHeading * -0.2) - (sinCamHeading *
-                *(0.4 * camHeading + 0.3)), (sinCamHeading * -0.2) + (cosCamHeading * (0.4 * camHeading + 0.3)), 0.6);
-                *
-                 */
+                let coords = game.getOffsetFromEntityInWorldCoords(this.localPlayer.scriptID, (cosCamHeading * -0.2) - (sinCamHeading *
+                (0.4 * camHeading + 0.3)), (sinCamHeading * -0.2) + (cosCamHeading * (0.4 * camHeading + 0.3)), 0.6);
+
+                let ray = game.startShapeTestCapsule(coords.x, coords.y, coords.z - 0.2, coords.x, coords.y, coords.z + 0.2, 1.0, 95, this.localPlayer.scriptID, 7);
+                let [_, blocked, coords1, coords2, entity] = game.getShapeTestResult(ray, false, null, null, null);
+                //alt.log("Blocked: " + blocked);
+                //alt.log("Entity: " + game.getEntityType(entity));
 
                 game.setNetworkTaskParamFloat(this.localPlayer.scriptID, "Pitch", camPitch);
                 game.setNetworkTaskParamFloat(this.localPlayer.scriptID, "Heading", camHeading * -1.0 + 1.0);
-                game.setNetworkTaskParamBool(this.localPlayer.scriptID, "isBlocked", 0);
+                game.setNetworkTaskParamBool(this.localPlayer.scriptID, "isBlocked", blocked);
                 game.setNetworkTaskParamBool(this.localPlayer.scriptID, "isFirstPerson", game._0xEE778F8C7E1142E2(game._0x19CAFA3C87F7C2FF()) === 4);
 
             }
