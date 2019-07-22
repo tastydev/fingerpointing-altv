@@ -8,7 +8,7 @@ export default class Fingerpointing {
         this.interval = null;
         this.cleanStart = false;
         this.gameplayCam = game.createCameraWithParams("gameplay");
-        this.localPlayer = alt.getLocalPlayer();
+        this.localPlayer = alt.Player.local;
     }
 
         start() {
