@@ -16,9 +16,9 @@ export default class Fingerpointing {
                 this.active = true;
 
                 this.requestAnimDictPromise("anim@mp_point").then(()=>{
-                    game.setPedCurrentWeaponVisible(this.localPlayer.scriptID, 0, 1, 1, 1);
+                    game.setPedCurrentWeaponVisible(this.localPlayer.scriptID, false, true, true, true);
                     game.setPedConfigFlag(this.localPlayer.scriptID, 36, true);
-                    game.taskMoveNetwork(this.localPlayer.scriptID,"task_mp_pointing", 0.5, false, "anim@mp_point", 24);
+                    game.taskMoveNetworkByName(this.localPlayer.scriptID,"task_mp_pointing", 0.5, false, "anim@mp_point", 24);
                     game.removeAnimDict("anim@mp_point");
                     this.cleanStart = true;
                     this.interval = alt.setInterval(this.process.bind(this), 0);
@@ -38,22 +38,19 @@ export default class Fingerpointing {
 
                 if(this.cleanStart){
                     this.cleanStart = false;
-                    game.setNetworkTaskAction(this.localPlayer.scriptID, "Stop");
+                    game.requestTaskMoveNetworkStateTransition(this.localPlayer.scriptID, "Stop");
 
                     if (!game.isPedInjured(this.localPlayer.scriptID)) {
                         game.clearPedSecondaryTask(this.localPlayer.scriptID);
                     }
                     if (!game.isPedInAnyVehicle(this.localPlayer.scriptID, true)) {
-                        game.setPedCurrentWeaponVisible(this.localPlayer.scriptID, 1, 1, 1, 1);
+                        game.setPedCurrentWeaponVisible(this.localPlayer.scriptID, true, true, true, true);
                     }
                     game.setPedConfigFlag(this.localPlayer.scriptID, 36, false);
                     game.clearPedSecondaryTask(this.localPlayer.scriptID);
                 }
             }
         }
-
-
-
 
         getRelativePitch () {
             let camRot = game.getGameplayCamRot(2);
@@ -63,7 +60,7 @@ export default class Fingerpointing {
         process () {
             if (this.active) {
 
-                game.isTaskMoveScriptedActive(this.localPlayer.scriptID);
+                game.isTaskMoveNetworkActive(this.localPlayer.scriptID);
 
                 let camPitch = this.getRelativePitch();
 
@@ -96,10 +93,10 @@ export default class Fingerpointing {
                 //alt.log("Blocked: " + blocked);
                 //alt.log("Entity: " + game.getEntityType(entity));
 
-                game.setNetworkTaskParamFloat(this.localPlayer.scriptID, "Pitch", camPitch);
-                game.setNetworkTaskParamFloat(this.localPlayer.scriptID, "Heading", camHeading * -1.0 + 1.0);
-                game.setNetworkTaskParamBool(this.localPlayer.scriptID, "isBlocked", blocked);
-                game.setNetworkTaskParamBool(this.localPlayer.scriptID, "isFirstPerson", game._0xEE778F8C7E1142E2(game._0x19CAFA3C87F7C2FF()) === 4);
+                game.setTaskMoveNetworkSignalFloat(this.localPlayer.scriptID, "Pitch", camPitch);
+                game.setTaskMoveNetworkSignalFloat(this.localPlayer.scriptID, "Heading", camHeading * -1.0 + 1.0);
+                game.setTaskMoveNetworkSignalBool(this.localPlayer.scriptID, "isBlocked", blocked);
+                game.setTaskMoveNetworkSignalBool(this.localPlayer.scriptID, "isFirstPerson", game._0xEE778F8C7E1142E2(game._0x19CAFA3C87F7C2FF()) === 4);
 
             }
         }
