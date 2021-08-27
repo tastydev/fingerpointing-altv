@@ -136,8 +136,8 @@ class Fingerpointing {
 			null,
 			null
 		);
-		alt.log('Blocked: ' + blocked);
-		alt.log('Entity: ' + game.getEntityType(entity));
+		//alt.log('Blocked: ' + blocked);
+		//alt.log('Entity: ' + game.getEntityType(entity));
 		if (blocked && this.lastBlockDate === null) {
 			this.lastBlockDate = new Date();
 		}
@@ -184,7 +184,7 @@ class Fingerpointing {
 				tries++;
 				if (game.hasAnimDictLoaded(dict)) {
 					alt.clearInterval(check);
-					alt.log('Anim dict loaded');
+					//alt.log('Anim dict loaded');
 					resolve(true);
 				} else if (tries > 30) {
 					alt.clearInterval(check);
