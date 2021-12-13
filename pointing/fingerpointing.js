@@ -164,7 +164,7 @@ class Fingerpointing {
 		game.setTaskMoveNetworkSignalBool(
 			this.localPlayer.scriptID,
 			'isFirstPerson',
-			game._0xEE778F8C7E1142E2(game._0x19CAFA3C87F7C2FF()) === 4
+			game.getCamViewModeForContext(game.getCamActiveViewModeContext()) === 4
 		);
 	}
 
