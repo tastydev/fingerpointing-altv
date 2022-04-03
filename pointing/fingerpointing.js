@@ -8,7 +8,6 @@ class Fingerpointing {
 		this.cleanStart = false;
 		this.debounceTime = 150;
 		this.lastBlockDate = null;
-		this.gameplayCam = game.createCameraWithParams('gameplay');
 		this.localPlayer = alt.Player.local;
 		this.registerEvents();
 	}
@@ -72,7 +71,7 @@ class Fingerpointing {
 		if (!game.isPedInjured(this.localPlayer.scriptID)) {
 			game.clearPedSecondaryTask(this.localPlayer.scriptID);
 		}
-		if (!game.isPedInAnyVehicle(this.localPlayer.scriptID, true)) {
+		if (!this.localPlayer.vehicle) {
 			game.setPedCurrentWeaponVisible(
 				this.localPlayer.scriptID,
 				true,
@@ -136,8 +135,6 @@ class Fingerpointing {
 			null,
 			null
 		);
-		//alt.log('Blocked: ' + blocked);
-		//alt.log('Entity: ' + game.getEntityType(entity));
 		if (blocked && this.lastBlockDate === null) {
 			this.lastBlockDate = new Date();
 		}
@@ -184,7 +181,6 @@ class Fingerpointing {
 				tries++;
 				if (game.hasAnimDictLoaded(dict)) {
 					alt.clearInterval(check);
-					//alt.log('Anim dict loaded');
 					resolve(true);
 				} else if (tries > 30) {
 					alt.clearInterval(check);
