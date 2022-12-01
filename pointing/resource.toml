@@ -1,0 +1,4 @@
+client-files = [ 'fingerpointing.js' ]
+client-main = 'fingerpointing.js'
+main = '_keep.js'
+type = 'js'
